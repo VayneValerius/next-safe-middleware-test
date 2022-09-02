@@ -9,12 +9,11 @@ import {
   nextSafe,
 } from '@next-safe/middleware';
 
+// This is an async function that in the actual codebase changes directives based on host and path.
 const cspMiddleware = csp(async ({ req }) => {
-  // your CSP base configuration with IntelliSense
-  // single quotes for values like 'self' are automatic
   return {
     directives: {
-      'default-src': ['self'],
+      'default-src': ['self', 'http://localhost:3000'],
       'base-uri': ['self'],
       'object-src': ['none'],
       'upgrade-insecure-requests': [],
@@ -26,8 +25,14 @@ const cspMiddleware = csp(async ({ req }) => {
         'https://use.fontawesome.com',
       ],
       'font-src': ['https://fonts.gstatic.com', 'https://use.fontawesome.com'],
-      'connect-src': ['https://www.google-analytics.com', 'ws:', 'blob:'],
+      'connect-src': [
+        'https://www.google-analytics.com',
+        'ws:',
+        'blob:',
+        'http://localhost:3000',
+      ],
     },
+    // Don't want directives we haven't set.  Want to test csp and use csp as it would be in production
     isDev: false,
     reportOnly: true,
   };
